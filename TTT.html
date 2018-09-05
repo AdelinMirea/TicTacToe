@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Tic Tac Toe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    
+</body>
+
+<script>
+    let rowsNum = 3; //number of rows 
+    let area = document.createElement('div'); area.innerHTML = '';
+    let rows = [];
+    let buttons = [];
+
+    let input = document.createElement('input');
+    input.id = 'inputID';
+    input.style.marginTop = '15%';
+    input.style.marginLeft = '45%';
+    input.style.marginBottom = '15px';
+
+    input.placeholder = 'Number of rows:';
+
+    document.body.onload = function(){
+        document.getElementById('inputID').focus();
+    }
+    /*
+    document.body.addEventListener('keydown', function(ev){
+        if(ev.keyCode == 116){
+            alert('noo');
+        }
+    })*/
+
+    input.addEventListener('keypress', function(ev){
+        if(ev.keyCode == 13 && input.value < 10 && input.value > 2){
+            rowsNum = input.value;
+            //console.log(rowsNum);
+            if(area.innerHTML == '' ){
+                createArea();
+                this.style.marginTop = '0';
+            }else{
+                let r = confirm('Do you want to restart?');
+                if(r == true){
+                    createArea();
+                }
+            }
+        }else if(this.value == '' && ev.keyCode == 13){
+            let r = confirm('Do you want to reset?');
+            if(r == true){
+                area.innerHTML = '';
+                this.style.marginTop = '15%';
+            }
+        }
+    })
+
+    let current = 'X';
+    document.body.appendChild(input);
+
+    let currentTurn = document.createElement('p');
+    currentTurn.innerHTML = 'Current: X';
+    document.body.appendChild(currentTurn);
+
+    function createArea(){
+        area.innerHTML = '';    
+        buttons = [];
+        for(let i=0; i<rowsNum; i++){
+            rows[i] = document.createElement('div');
+            for(let j=0; j<rowsNum; j++){
+                buttons.push(document.createElement('button'));
+                buttons[buttons.length-1].innerHTML = '.';//buttons.length-1;
+                buttons[buttons.length-1].style.width = 100 + 'px';
+                buttons[buttons.length-1].style.height = buttons[buttons.length-1].style.width;
+                console.log(buttons[0].style.backgroundColor);
+                buttons[buttons.length-1].addEventListener('click', function(){
+                    this.disabled = true;
+                    if(current == 'X'){
+                        this.style.backgroundColor = 'blue';
+                        this.innerHTML = 'X';
+                        current = 'O';
+                    }else{
+                        this.style.backgroundColor = 'red';
+                        this.innerHTML = 'O';
+                        current = 'X';
+                    }
+                    currentTurn.innerHTML = 'Current: ' + current;
+                    checkIfOver();
+                })
+
+                rows[i].appendChild(buttons[buttons.length-1]);
+            }
+    
+            area.style.margin = 'auto';
+            area.style.width = 100*rowsNum + 'px';
+            area.appendChild(rows[i]);
+        }
+    }
+
+    function checkIfOver(){
+        let r;
+        r = checkDiag();
+        if(r != false){
+            alert(r + ' wins!');
+        }
+        r = checkHoriz();
+        if(r != false){
+            alert(r + ' wins!');
+        }
+        r = checkVert();
+        if(r != false){
+            alert(r + ' wins!');
+        }
+    }
+    
+    function checkDiag(){
+        let pos = 0;
+        let win = true;
+        let winner;
+        for(let i=0; i<rowsNum-1; i++){
+            if((buttons[pos].style.backgroundColor != buttons[pos*1+(rowsNum*1+1)].style.backgroundColor) || buttons[pos].style.backgroundColor=='' || buttons[pos*1+(rowsNum*1+1)].style.backgroundColor == ''){
+                win = false;
+                break;
+            }
+            winner = buttons[pos].innerHTML;
+            pos = pos*1 + rowsNum*1 + 1;
+        }
+        if(win == true){
+            return winner;
+        }
+
+        pos = rowsNum - 1;
+        win = true;
+        for(let i=0; i<rowsNum-1; i++){
+            if((buttons[pos].style.backgroundColor != buttons[pos*1+(rowsNum*1-1)].style.backgroundColor) || buttons[pos].style.backgroundColor=='' || buttons[pos*1+(rowsNum*1-1)].style.backgroundColor == ''){
+                win = false;
+                break;
+            }
+            pos = pos*1 + rowsNum*1 - 1;
+            winner = buttons[pos].innerHTML;
+        }
+
+        if(win == true){
+            return winner;
+        }
+
+        return false;
+
+    }
+
+    function checkHoriz(){
+        let j=0;
+        let win;
+        let winner;
+        for(let i=0; i<rowsNum; i++){
+            win = true;
+            for(let k = j; k<rowsNum*1+j-1; k++){
+                if((buttons[k].style.backgroundColor != buttons[k*1+1].style.backgroundColor) || buttons[k].style.backgroundColor == '' || buttons[k*1+1].style.backgroundColor == ''){
+                    win = false;
+                    break;
+                }
+                winner = buttons[k].innerHTML;
+            }
+            if(win==true){
+                return winner;
+            }
+           j = j*1 + rowsNum*1;        
+        }
+        return false;
+    }
+
+    function checkVert(){
+        let win;
+        let k;
+        let max = rowsNum * (rowsNum-1);
+        for(let i=0; i<rowsNum; i++){
+            win = true;
+            let winner;
+            for(let k = i+rowsNum*1; k<=max + i; k = k*1 + rowsNum*1){
+                //console.log(k);
+                if((buttons[k-rowsNum].style.backgroundColor != buttons[k].style.backgroundColor) || buttons[k-rowsNum].style.backgroundColor == '' || buttons[k].style.backgroundColor == ''){
+                    win = false;
+                    break;
+                }
+                winner = buttons[k].innerHTML;
+            }
+            if(win == true){
+                return winner;
+            }
+        }
+        return false;
+    }
+
+    function resetCurrent(){
+
+    }
+    //X turn, O turn... score....
+    document.body.appendChild(area);
+
+</script>
+</html>
