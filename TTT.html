@@ -53,6 +53,8 @@
                 area.innerHTML = '';
                 this.style.marginTop = '15%';
             }
+        }else if((input.value>=10 || input.value<=2) && ev.keyCode == 13) {
+            alert('Input must be a number 3-9');
         }
     })
 
@@ -61,10 +63,13 @@
 
     let currentTurn = document.createElement('p');
     currentTurn.innerHTML = 'Current: X';
+    currentTurn.style.display = 'none';
+    currentTurn.style.marginLeft = '5px';
     document.body.appendChild(currentTurn);
 
     function createArea(){
         area.innerHTML = '';    
+        currentTurn.style.display = 'initial';
         buttons = [];
         for(let i=0; i<rowsNum; i++){
             rows[i] = document.createElement('div');
@@ -101,17 +106,24 @@
     function checkIfOver(){
         let r;
         r = checkDiag();
-        if(r != false){
-            alert(r + ' wins!');
-        }
+        if(r != false){won(r);   }
         r = checkHoriz();
-        if(r != false){
-            alert(r + ' wins!');
-        }
+        if(r != false){ won(r);  }
         r = checkVert();
-        if(r != false){
-            alert(r + ' wins!');
-        }
+        if(r != false){ won(r);  }
+    }
+
+    function won(r){
+        alert(r + ' wins!');
+            let reply = confirm('Want to start over?');
+            if(reply == true){
+                createArea();
+            }else{
+                for(let i=0; i<buttons.length; i++){
+                    buttons[i].disabled = true;
+                }
+                currentTurn.style.display = 'none';
+            }
     }
     
     function checkDiag(){
